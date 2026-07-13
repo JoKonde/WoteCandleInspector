@@ -33,6 +33,7 @@ int OnInit()
    EventSetMillisecondTimer(250);
    CreatePanel();
    HidePanel();
+   ChartSetInteger(0, CHART_EVENT_MOUSE_MOVE, true);
    return(INIT_SUCCEEDED);
 }
 
@@ -131,16 +132,19 @@ void ClearSelectedBox()
    ObjectDelete(0, PANEL_BOX);
 }
 
+int GetNearestBarByX(const int x)
+{
+   datetime t;
+   double p;
+   int subwindow = 0;
+   if(!ChartXYToTimePrice(0, x, 0, subwindow, t, p))
+      return(-1);
+   return(iBarShift(_Symbol, _Period, t, false));
+}
+
 void ShowCandleInfoByClick(const int x, const int y)
 {
-   int subwindow = 0;
-   datetime candle_time;
-   double candle_price;
-
-   if(!ChartXYToTimePrice(0, x, y, subwindow, candle_time, candle_price))
-      return;
-
-   int shift = iBarShift(_Symbol, _Period, candle_time, false);
+   int shift = GetNearestBarByX(x);
    if(shift < 0)
       return;
 
@@ -149,6 +153,9 @@ void ShowCandleInfoByClick(const int x, const int y)
    double h = iHigh(_Symbol, _Period, shift);
    double l = iLow(_Symbol, _Period, shift);
    double c = iClose(_Symbol, _Period, shift);
+
+   if(t <= 0)
+      return;
 
    string type = CandleType(o, c);
    string dt   = TimeToString(t, TIME_DATE | TIME_MINUTES);
