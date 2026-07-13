@@ -1,0 +1,108 @@
+=== WoteCandleInspector - Journal de discussion ===
+
+[2026-07-13 17:19] - Analyse initiale du projet
+Sujet : Première exploration et compréhension du projet
+Décisions/Solutions :
+- Projet = indicateur MetaTrader 5 (MQL5) pour inspecter les bougies japonaises
+- Architecture modulaire en classes (Include/*.mqh)
+- Flux : clic sur graphique → sélection bougie → analyse → panneau + rectangle doré
+- README en retard par rapport au code (code déjà en v4.0 Pro avec patterns, corps, mèches, pips)
+État d'avancement :
+- v1.0 OHLC : OK
+- v1.1 corps/mèches/amplitude : OK (en pips)
+- v1.2 patterns : OK (Doji, Marteau, Shooting Star, Bullish/Bearish Impulse)
+- v1.3 panneau UI : OK (basique, thème noir/blanc/bleu)
+- v2.0 assistant pédagogique : partiel (interprétations textuelles présentes)
+- Manquant : copie presse-papiers, personnalisation avancée du panneau
+Prochaines actions :
+- Attendre instructions utilisateur pour évolutions ou corrections
+
+[2026-07-13 17:20] - Mise à jour README
+Sujet : Synchronisation README avec l'état réel du code (v4.0 Pro)
+Décisions/Solutions :
+- README mis à jour : fonctionnalités actuelles, architecture, installation, feuille de route avec statuts
+- Fonctionnalités prévues réduites à : presse-papiers, personnalisation panneau, assistant v2.0
+État d'avancement : README aligné avec le code
+Prochaines actions :
+- Copie presse-papiers, paramètres d'entrée panneau, ou autres features selon demande utilisateur
+
+[2026-07-13 17:23] - Correction erreurs compilation
+Sujet : 38 erreurs MetaEditor - fichiers .mqh introuvables
+Cause : #include <Include/...> résolvait vers MQL5/Include/Include/ (double dossier)
+Solution :
+- WoteCandleInspector.mq5 : chevrons → guillemets (#include "Include/...")
+- Fichiers .mqh dans Include/ : includes relatifs (#include "WCI_Utils.mqh", etc.)
+État : 9 includes corrigés, prêt à recompiler dans MetaEditor
+
+[2026-07-13 17:30] - Nouvelle cause des 45 erreurs
+Sujet : Après correction des includes, MetaEditor affiche 45 erreurs
+Cause racine :
+- Tous les .mqh commencent par `#pragma once`
+- En MQL5, `#pragma once` n'est PAS supporté → erreur "#pragma - invalid preprocessor command"
+- Les headers ne chargent pas → cascade (g_panel, CWCI_Analyzer, etc. undeclared)
+Solution prévue (en attente permission) :
+- Remplacer `#pragma once` par des include guards classiques :
+  #ifndef WCI_XXX_MQH / #define WCI_XXX_MQH / ... / #endif
+- Appliquer dans tutoriels ET dossier MT5 Indicators
+État : diagnostic OK, pas encore codé
+
+[2026-07-13 17:31] - Remplacement #pragma once
+Sujet : Correction compilation MQL5 - include guards
+Solution :
+- Remplacé `#pragma once` par #ifndef/#define/#endif dans les 7 .mqh
+- Synchronisé vers dossier MT5 Indicators (copie des headers)
+État : prêt à recompiler (F7) — objectif 0 errors
+
+[2026-07-13 17:33] - 3 erreurs restantes
+Sujet : CHART_MOUSE_X dans ByCrosshair() (WCI_Selector.mqh L53)
+Cause : CHART_MOUSE_X n'existe pas en MQL5 — d'où undeclared + wrong params + cannot convert enum
+Contexte : ByCrosshair() n'est jamais appelée (seul ByClickX via CHARTEVENT_CLICK)
+Solution : ByCrosshair() supprimée (tutoriels + MT5)
+État : prêt F7 — objectif 0 errors
+
+[2026-07-13 17:37] - Bug affichage panneau
+Sujet : Clic OK (rectangle doré) mais panneau noir quasi vide
+Symptôme : seul "WoteCandleInspector v4.0 Pro--------------------" visible
+Cause : CWCI_Panel utilise OBJ_LABEL — les `\n` du rapport ne s'affichent pas correctement
+       → texte collé en une ligne, reste hors zone visible du panneau
+Solution prévue : remplacer OBJ_LABEL par OBJ_EDIT (readonly + multiligne) dans WCI_Panel.mqh
+État : diagnostic OK — en attente permission pour coder
+
+[2026-07-13 17:38] - Fix affichage panneau
+Sujet : Remplacement OBJ_LABEL → OBJ_EDIT readonly multiligne
+Fichiers : WCI_Panel.mqh (tutoriels + MT5)
+État : prêt à recompiler F7 puis retester le clic sur une bougie
+
+[2026-07-13 17:44] - OBJ_EDIT n'a pas résolu le multiligne
+Cause confirmée : OBJ_EDIT est mono-ligne en MQL5 (les \n sont ignorés) — d'où le même symptôme
+Solution prévue : une OBJ_LABEL par ligne du rapport (StringSplit sur \n) — fiable et simple
+État : en attente permission "code"
+
+[2026-07-13 17:45] - Fix panneau multiligne (labels)
+Sujet : Une OBJ_LABEL par ligne via StringSplit
+Fichiers : WCI_Panel.mqh (tutoriels + MT5)
+État : prêt F7 — recharger l'indicateur et cliquer une bougie
+
+[2026-07-13 17:51] - Texte coupé (interprétation Doji)
+Sujet : User veut scroll horizontal dans le panel
+Contrainte MQL5 : pas de scrollbar native sur OBJ_LABEL
+Options :
+A) Word-wrap (recommandé, simple) — couper les longues lignes en plusieurs labels
+B) Boutons ◀ ▶ + décalage texte (scroll simulé, plus lourd)
+C) Élargir le panneau dynamiquement
+Proposition : option A (word-wrap) — en attente permission
+
+[2026-07-13 17:54] - Word-wrap panneau
+Sujet : Option A — longues lignes découpées dans la largeur du panel
+Fichier : WCI_Panel.mqh (tutoriels + MT5)
+État : prêt F7 — retester un Doji (interprétation complète sur 2+ lignes)
+
+[2026-07-13 18:00] - README installation détaillée
+Sujet : Guide compiler + mettre sur graphique MT5
+Contenu ajouté : dossier de données, structure Include, F7, glisser-déposer, utilisation clic
+État : README à jour
+
+[2026-07-13 18:02] - Sync README vers MT5
+Sujet : Copie README.md tutoriels → MQL5/Indicators/WoteCandleInspector/
+État : tutoriels + MT5 alignés sur le guide d'installation
+

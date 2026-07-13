@@ -1,5 +1,7 @@
-#pragma once
-#include <Include/WCI_Candle.mqh>
+#ifndef WCI_PATTERNS_MQH
+#define WCI_PATTERNS_MQH
+
+#include "WCI_Candle.mqh"
 
 class CWCI_Patterns
 {
@@ -49,3 +51,5 @@ public:
       return "Bougie baissiere : les vendeurs dominent.";
    }
 };
+
+#endif

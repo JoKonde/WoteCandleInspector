@@ -8,13 +8,13 @@
 #property indicator_buffers 0
 #property indicator_plots   0
 
-#include <Include/WCI_Utils.mqh>
-#include <Include/WCI_Candle.mqh>
-#include <Include/WCI_Patterns.mqh>
-#include <Include/WCI_Selector.mqh>
-#include <Include/WCI_Panel.mqh>
-#include <Include/WCI_Analyzer.mqh>
-#include <Include/WCI_Theme.mqh>
+#include "Include/WCI_Utils.mqh"
+#include "Include/WCI_Candle.mqh"
+#include "Include/WCI_Patterns.mqh"
+#include "Include/WCI_Selector.mqh"
+#include "Include/WCI_Panel.mqh"
+#include "Include/WCI_Analyzer.mqh"
+#include "Include/WCI_Theme.mqh"
 
 CWCI_Panel    g_panel;
 CWCI_Candle   g_candle;

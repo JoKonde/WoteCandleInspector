@@ -1,5 +1,7 @@
-#pragma once
-#include <Include/WCI_Candle.mqh>
+#ifndef WCI_SELECTOR_MQH
+#define WCI_SELECTOR_MQH
+
+#include "WCI_Candle.mqh"
 
 class CWCI_Selector
 {
@@ -45,14 +47,6 @@ public:
       return shift;
    }
 
-   static int ByCrosshair()
-   {
-      long x = 0;
-      if(!ChartGetInteger(0, CHART_MOUSE_X, 0, x))
-         return -1;
-      return ByClickX((int)x);
-   }
-
    static bool LoadSelectedCandle(const int shift, CWCI_Candle &candle)
    {
       if(shift < 0)
@@ -60,3 +54,5 @@ public:
       return candle.LoadByShift(shift);
    }
 };
+
+#endif

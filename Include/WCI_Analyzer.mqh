@@ -1,6 +1,8 @@
-#pragma once
-#include <Include/WCI_Candle.mqh>
-#include <Include/WCI_Patterns.mqh>
+#ifndef WCI_ANALYZER_MQH
+#define WCI_ANALYZER_MQH
+
+#include "WCI_Candle.mqh"
+#include "WCI_Patterns.mqh"
 
 class CWCI_Analyzer
 {
@@ -29,3 +31,5 @@ public:
       return report;
    }
 };
+
+#endif

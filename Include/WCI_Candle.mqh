@@ -1,5 +1,7 @@
-#pragma once
-#include <Include/WCI_Utils.mqh>
+#ifndef WCI_CANDLE_MQH
+#define WCI_CANDLE_MQH
+
+#include "WCI_Utils.mqh"
 
 class CWCI_Candle
 {
@@ -86,3 +88,5 @@ public:
       return TimeToString(time, TIME_DATE | TIME_MINUTES);
    }
 };
+
+#endif

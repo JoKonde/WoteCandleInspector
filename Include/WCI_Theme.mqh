@@ -1,4 +1,5 @@
-#pragma once
+#ifndef WCI_THEME_MQH
+#define WCI_THEME_MQH
 
 class CWCI_Theme
 {
@@ -43,3 +44,5 @@ public:
       return 20;
    }
 };
+
+#endif

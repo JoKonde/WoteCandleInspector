@@ -1,4 +1,5 @@
-#pragma once
+#ifndef WCI_UTILS_MQH
+#define WCI_UTILS_MQH
 
 string WCI_CandleType(const double open_price, const double close_price)
 {
@@ -24,3 +25,5 @@ double WCI_LowerWick(const double open_price, const double low_price, const doub
 {
    return MathMin(open_price, close_price) - low_price;
 }
+
+#endif
