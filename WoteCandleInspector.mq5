@@ -224,7 +224,7 @@ void ShowCandleInfoByClick(const int x, const int y)
    string pattern = DetectPattern(o, h, l, c);
    string interpretation = BuildInterpretation(pattern, type);
 
-   string txt = "WoteCandleInspector v3.0\n";
+   string txt = "WoteCandleInspector v3.1\n";
    txt += "-------------------------\n";
    txt += "Date : " + dt + "\n";
    txt += "Type : " + type + "\n";
