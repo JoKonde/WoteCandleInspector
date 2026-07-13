@@ -1,3 +1,8 @@
+//+------------------------------------------------------------------+
+//|                                          WoteCandleInspector.mq5 |
+//|                                                        Wote 2026 |
+//|                                                https://wotes.org |
+//+------------------------------------------------------------------+
 #property indicator_chart_window
 #property indicator_buffers 0
 #property indicator_plots   0
@@ -34,6 +39,20 @@ void OnDeinit(const int reason)
    ChartRedraw(0);
 }
 
+int OnCalculate(const int rates_total,
+                const int prev_calculated,
+                const datetime &time[],
+                const double &open[],
+                const double &high[],
+                const double &low[],
+                const double &close[],
+                const long &tick_volume[],
+                const long &volume[],
+                const int &spread[])
+{
+   return(rates_total);
+}
+
 void OnTimer()
 {
    if(g_panel_visible)
@@ -55,7 +74,7 @@ void OnChartEvent(const int id,
 
 void CreatePanel()
 {
-   if(!ObjectFind(0, PANEL_BG))
+   if(ObjectFind(0, PANEL_BG) < 0)
    {
       ObjectCreate(0, PANEL_BG, OBJ_RECTANGLE_LABEL, 0, 0, 0);
       ObjectSetInteger(0, PANEL_BG, OBJPROP_CORNER, CORNER_LEFT_UPPER);
@@ -72,7 +91,7 @@ void CreatePanel()
       ObjectSetInteger(0, PANEL_BG, OBJPROP_SELECTABLE, false);
    }
 
-   if(!ObjectFind(0, PANEL_TXT))
+   if(ObjectFind(0, PANEL_TXT) < 0)
    {
       ObjectCreate(0, PANEL_TXT, OBJ_LABEL, 0, 0, 0);
       ObjectSetInteger(0, PANEL_TXT, OBJPROP_CORNER, CORNER_LEFT_UPPER);
