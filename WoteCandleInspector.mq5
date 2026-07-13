@@ -3,6 +3,7 @@
 //|                                                        Wote 2026 |
 //|                                                https://wotes.org |
 //+------------------------------------------------------------------+
+#property strict
 #property indicator_chart_window
 #property indicator_buffers 0
 #property indicator_plots   0
@@ -13,14 +14,19 @@ input color  PanelBorderColor  = clrDodgerBlue;
 input color  CandleMarkColor   = clrGold;
 input int    PanelX            = 20;
 input int    PanelY            = 20;
-input int    PanelWidth        = 260;
-input int    PanelHeight       = 140;
+input int    PanelWidth        = 300;
+input int    PanelHeight       = 170;
 
-string PANEL_BG   = "WCI_PanelBG";
-string PANEL_TXT  = "WCI_PanelText";
-string PANEL_BOX  = "WCI_SelectedCandleBox";
+string PANEL_BG  = "WCI_PanelBG";
+string PANEL_TXT = "WCI_PanelText";
+string PANEL_BOX = "WCI_SelectedCandleBox";
 
 bool g_panel_visible = false;
+
+string CandleType(const double o,const double c)
+{
+   return (c >= o) ? "Haussiere" : "Baissiere";
+}
 
 int OnInit()
 {
@@ -144,8 +150,11 @@ void ShowCandleInfoByClick(const int x, const int y)
    double l = iLow(_Symbol, _Period, shift);
    double c = iClose(_Symbol, _Period, shift);
 
-   string type = (c >= o) ? "Haussiere" : "Baissiere";
+   string type = CandleType(o, c);
    string dt   = TimeToString(t, TIME_DATE | TIME_MINUTES);
+   double body = MathAbs(c - o);
+   double upper_wick = h - MathMax(o, c);
+   double lower_wick = MathMin(o, c) - l;
 
    string txt = "WoteCandleInspector v1.0\n";
    txt += "-------------------------\n";
@@ -154,7 +163,10 @@ void ShowCandleInfoByClick(const int x, const int y)
    txt += "Open  : " + DoubleToString(o, _Digits) + "\n";
    txt += "High  : " + DoubleToString(h, _Digits) + "\n";
    txt += "Low   : " + DoubleToString(l, _Digits) + "\n";
-   txt += "Close : " + DoubleToString(c, _Digits);
+   txt += "Close : " + DoubleToString(c, _Digits) + "\n\n";
+   txt += "Corps      : " + DoubleToString(body/_Point, 1) + " pts\n";
+   txt += "Mèche haute: " + DoubleToString(upper_wick/_Point, 1) + " pts\n";
+   txt += "Mèche basse: " + DoubleToString(lower_wick/_Point, 1) + " pts";
 
    ShowPanel(txt);
    DrawSelectedCandleBox(shift);
