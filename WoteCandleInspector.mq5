@@ -14,8 +14,8 @@ input color  PanelBorderColor  = clrDodgerBlue;
 input color  CandleMarkColor   = clrGold;
 input int    PanelX            = 20;
 input int    PanelY            = 20;
-input int    PanelWidth        = 330;
-input int    PanelHeight       = 220;
+input int    PanelWidth        = 360;
+input int    PanelHeight       = 250;
 
 string PANEL_BG  = "WCI_PanelBG";
 string PANEL_TXT = "WCI_PanelText";
@@ -35,15 +35,30 @@ double PipValue()
    return(_Point);
 }
 
+double CandleBody(const double o,const double c)
+{
+   return MathAbs(c - o);
+}
+
+double UpperWick(const double o,const double h,const double c)
+{
+   return h - MathMax(o, c);
+}
+
+double LowerWick(const double o,const double l,const double c)
+{
+   return MathMin(o, c) - l;
+}
+
 string DetectPattern(const double o,const double h,const double l,const double c)
 {
-   double body = MathAbs(c - o);
+   double body = CandleBody(o, c);
    double range = h - l;
    if(range <= 0.0)
       return("Aucun");
 
-   double upper_wick = h - MathMax(o, c);
-   double lower_wick = MathMin(o, c) - l;
+   double upper_wick = UpperWick(o, h, c);
+   double lower_wick = LowerWick(o, l, c);
 
    if(body <= range * 0.1)
       return("Doji");
@@ -55,6 +70,19 @@ string DetectPattern(const double o,const double h,const double l,const double c
       return("Shooting Star");
 
    return("Aucun");
+}
+
+string BuildInterpretation(const string pattern,const string type)
+{
+   if(pattern == "Marteau")
+      return("Rejet des bas : les acheteurs ont repris la main.");
+   if(pattern == "Shooting Star")
+      return("Rejet des hauts : les vendeurs ont repris le contrôle.");
+   if(pattern == "Doji")
+      return("Indecision : acheteurs et vendeurs sont équilibrés.");
+   if(type == "Haussiere")
+      return("Bougie haussiere : les acheteurs dominent.");
+   return("Bougie baissiere : les vendeurs dominent.");
 }
 
 int OnInit()
@@ -188,14 +216,15 @@ void ShowCandleInfoByClick(const int x, const int y)
 
    string type = CandleType(o, c);
    string dt   = TimeToString(t, TIME_DATE | TIME_MINUTES);
-   double body = MathAbs(c - o);
-   double upper_wick = h - MathMax(o, c);
-   double lower_wick = MathMin(o, c) - l;
+   double body = CandleBody(o, c);
+   double upper_wick = UpperWick(o, h, c);
+   double lower_wick = LowerWick(o, l, c);
    double range = h - l;
    double pip = PipValue();
    string pattern = DetectPattern(o, h, l, c);
+   string interpretation = BuildInterpretation(pattern, type);
 
-   string txt = "WoteCandleInspector v2.0\n";
+   string txt = "WoteCandleInspector v3.0\n";
    txt += "-------------------------\n";
    txt += "Date : " + dt + "\n";
    txt += "Type : " + type + "\n";
@@ -207,7 +236,8 @@ void ShowCandleInfoByClick(const int x, const int y)
    txt += "Corps       : " + DoubleToString(body / pip, 1) + " pips\n";
    txt += "Mèche haute : " + DoubleToString(upper_wick / pip, 1) + " pips\n";
    txt += "Mèche basse : " + DoubleToString(lower_wick / pip, 1) + " pips\n";
-   txt += "Amplitude   : " + DoubleToString(range / pip, 1) + " pips";
+   txt += "Amplitude   : " + DoubleToString(range / pip, 1) + " pips\n\n";
+   txt += "Interprétation : " + interpretation;
 
    ShowPanel(txt);
    DrawSelectedCandleBox(shift);
