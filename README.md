@@ -1,31 +1,49 @@
 # WoteCandleInspector
 
-WoteCandleInspector is a MetaTrader 5 indicator that helps traders inspect candlesticks interactively. By clicking a candle, the indicator displays OHLC values and candle details directly on the chart.
+**WoteCandleInspector** est un indicateur pour **MetaTrader 5 (MT5)** permettant d'inspecter facilement les bougies japonaises directement sur le graphique.
 
-## Features
+En sélectionnant une bougie, l'indicateur affiche ses informations essentielles (Open, High, Low et Close) ainsi que des données utiles pour l'analyse du **Price Action**.
 
-- Click a candle to display Open, High, Low, and Close
-- Show candle date and time
-- Highlight the selected candle
-- Measure body and wick sizes
-- Detect basic candlestick patterns
-- Clean educational interface for Price Action analysis
+## ✨ Fonctionnalités
 
-## Project Status
+### Version actuelle
 
-Initial version in development.
+- Affichage des valeurs **Open**, **High**, **Low** et **Close**
+- Affichage de la date et de l'heure de la bougie
+- Mise en évidence de la bougie sélectionnée
 
-## Planned Improvements
+### Fonctionnalités prévues
 
-- More candlestick pattern detection
-- Better chart panel design
-- Copy candle data to clipboard
-- Extra trading insights for learning Price Action
+- Mesure du corps de la bougie
+- Mesure des mèches supérieure et inférieure
+- Calcul de l'amplitude en points et en pips
+- Détection automatique des principaux patterns de chandeliers
+- Panneau d'informations moderne et personnalisable
+- Interprétation pédagogique des bougies pour l'apprentissage du Price Action
+- Copie des informations de la bougie dans le presse-papiers
 
-## License
+## 🎯 Objectif
 
-To be decided.
+L'objectif de **WoteCandleInspector** est de faciliter l'analyse des chandeliers japonais et d'aider les traders à mieux comprendre le comportement des acheteurs et des vendeurs à chaque bougie.
 
-## Author
+## 🚀 Feuille de route
 
-WOTE / Jonathan Konde
+- **v1.0** : Inspection des valeurs OHLC
+- **v1.1** : Calcul du corps, des mèches et de l'amplitude
+- **v1.2** : Détection des patterns de chandeliers
+- **v1.3** : Interface graphique améliorée
+- **v2.0** : Assistant pédagogique dédié au Price Action
+
+## 🤝 Contributions
+
+Les suggestions, les signalements de bugs et les contributions sont les bienvenus.
+
+## 📄 Licence
+
+À définir.
+
+---
+
+Développé avec ❤️ par **Jonathan Konde**
+
+**WOTE — Au-delà de l'imagination !**
