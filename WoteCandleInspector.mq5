@@ -14,8 +14,8 @@ input color  PanelBorderColor  = clrDodgerBlue;
 input color  CandleMarkColor   = clrGold;
 input int    PanelX            = 20;
 input int    PanelY            = 20;
-input int    PanelWidth        = 300;
-input int    PanelHeight       = 170;
+input int    PanelWidth        = 330;
+input int    PanelHeight       = 220;
 
 string PANEL_BG  = "WCI_PanelBG";
 string PANEL_TXT = "WCI_PanelText";
@@ -26,6 +26,35 @@ bool g_panel_visible = false;
 string CandleType(const double o,const double c)
 {
    return (c >= o) ? "Haussiere" : "Baissiere";
+}
+
+double PipValue()
+{
+   if(_Digits == 3 || _Digits == 5)
+      return(_Point * 10.0);
+   return(_Point);
+}
+
+string DetectPattern(const double o,const double h,const double l,const double c)
+{
+   double body = MathAbs(c - o);
+   double range = h - l;
+   if(range <= 0.0)
+      return("Aucun");
+
+   double upper_wick = h - MathMax(o, c);
+   double lower_wick = MathMin(o, c) - l;
+
+   if(body <= range * 0.1)
+      return("Doji");
+
+   if(lower_wick >= body * 2.0 && upper_wick <= body * 0.5)
+      return("Marteau");
+
+   if(upper_wick >= body * 2.0 && lower_wick <= body * 0.5)
+      return("Shooting Star");
+
+   return("Aucun");
 }
 
 int OnInit()
@@ -162,18 +191,23 @@ void ShowCandleInfoByClick(const int x, const int y)
    double body = MathAbs(c - o);
    double upper_wick = h - MathMax(o, c);
    double lower_wick = MathMin(o, c) - l;
+   double range = h - l;
+   double pip = PipValue();
+   string pattern = DetectPattern(o, h, l, c);
 
-   string txt = "WoteCandleInspector v1.0\n";
+   string txt = "WoteCandleInspector v2.0\n";
    txt += "-------------------------\n";
    txt += "Date : " + dt + "\n";
-   txt += "Type : " + type + "\n\n";
+   txt += "Type : " + type + "\n";
+   txt += "Pattern : " + pattern + "\n\n";
    txt += "Open  : " + DoubleToString(o, _Digits) + "\n";
    txt += "High  : " + DoubleToString(h, _Digits) + "\n";
    txt += "Low   : " + DoubleToString(l, _Digits) + "\n";
    txt += "Close : " + DoubleToString(c, _Digits) + "\n\n";
-   txt += "Corps      : " + DoubleToString(body/_Point, 1) + " pts\n";
-   txt += "Mèche haute: " + DoubleToString(upper_wick/_Point, 1) + " pts\n";
-   txt += "Mèche basse: " + DoubleToString(lower_wick/_Point, 1) + " pts";
+   txt += "Corps       : " + DoubleToString(body / pip, 1) + " pips\n";
+   txt += "Mèche haute : " + DoubleToString(upper_wick / pip, 1) + " pips\n";
+   txt += "Mèche basse : " + DoubleToString(lower_wick / pip, 1) + " pips\n";
+   txt += "Amplitude   : " + DoubleToString(range / pip, 1) + " pips";
 
    ShowPanel(txt);
    DrawSelectedCandleBox(shift);
